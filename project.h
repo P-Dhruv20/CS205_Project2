@@ -26,36 +26,66 @@ public:
         srand(time(NULL));
     }
 
-    static int nearest_neighbor(vector<double> a, vector<vector<double> > b) {
+    static int nearest_neighbor(vector<double> queryInstance, vector<vector<double>> data) {
         double minDistance = 0.0;
-        int classification = (int)a.at(0);
-        for (int i = 0; i < b.at(0).size(); i++) {
+        int classification = static_cast<int>(queryInstance.at(0));
+        const int numInstances = data.at(0).size();
+
+        for (int rowIdx = 0; rowIdx < numInstances; rowIdx++) {
             double distance = 0.0;
-            for (int j = 1; j < b.size(); j++) { distance += pow(b.at(j).at(i) - a.at(j), 2); }
-            if (i == 0) { minDistance = distance; }
+            for (int featureIdx = 1; featureIdx < data.size(); featureIdx++) {
+                 const double featureDist = data.at(featureIdx).at(rowIdx) - queryInstance.at(featureIdx);
+                 distance += featureDist * featureDist;
+            }
+
+            if (rowIdx == 0) {
+                 minDistance = distance;
+            }
             else if (distance < minDistance) {
                 minDistance = distance;
-                classification = (int) b.at(0).at(i);
+                classification = static_cast<int>(data.at(0).at(rowIdx));
             }
         }
+
         return classification;
     }
 
-    static double leaveOneOutValidator(vector<vector<double> > currSet) {
+    static double leaveOneOutValidator(vector<vector<double> > currData) {
+        const int numInstances = currData.at(0).size();
+
         vector<vector<double>> instance_subset;
-        vector<double> instanceCheck;
+        vector<double> testInstance;
         int numCorrect = 0;
-        for (int i = 0; i < currSet.at(0).size(); i++) {
-            for (auto tmp: currSet) {
-                instanceCheck.push_back(tmp.at(i));
-                tmp.erase(tmp.begin() + i);
-                instance_subset.push_back(tmp);
+
+        for (int leftOutRowIdx = 0; leftOutRowIdx < numInstances; leftOutRowIdx++) {
+            for (const auto& column : currData) {
+                testInstance.push_back(column.at(leftOutRowIdx));
+
+                // Add remaining instances in the colunmn
+                vector<double> columnSubset;
+                columnSubset.reserve(column.size() - 1);
+                for (int row = 0; row < column.size(); row++) {
+                    if (row == leftOutRowIdx)
+                        continue;
+                    
+                    columnSubset.push_back(column.at(row));
+                }
+                
+                instance_subset.emplace_back(std::move(columnSubset));
             }
-            if ((int) nearest_neighbor(instanceCheck, instance_subset) == (int) instanceCheck.at(0)) { numCorrect++; }
+
+            const int predictedClass = nearest_neighbor(testInstance, instance_subset);
+            const int expectedClass = static_cast<int>(testInstance.at(0));
+
+            if (predictedClass == expectedClass) {
+                 numCorrect++;
+            }
+
             instance_subset.clear();
-            instanceCheck.clear();
+            testInstance.clear();
         }
-        return ((double) numCorrect / (double) currSet.at(0).size()) * 100.00;
+
+        return (numCorrect / static_cast<double>(numInstances)) * 100.00;
     }
 
     static void displayLocal(vector<int> localBest, double localmax) {
@@ -77,48 +107,61 @@ public:
     }
 
     void forward_selection() {
+        const int numFeatures = dataset.size();
         vector<int> bestFeatures;
-        vector<int> localBest;
-        double accuracy, max = 0.0;
-        for (int i = 1; i <= getSize(); i++) {
-            double localmax = 0.0;
-            vector<int> tmpMax;
-            for (int j = 1; j <= getSize(); j++) {
-                vector<vector<double>> tmp;
-                vector<int> tmpLocal;
-                tmp.push_back(dataset.at(0));
-                tmpLocal = localBest;
 
-                for (int x: tmpLocal) { tmp.push_back(dataset.at(x)); }
+        double maxAccuracy = 0;
+        for (int depth = 1; depth < numFeatures; ++depth) {
+            cout << "Exploring accuracy of NN with " << depth << " features!" << endl;
 
-                if (find(tmpLocal.begin(), tmpLocal.end(), j) == tmpLocal.end()) {
-                    tmp.push_back(dataset.at(j));
-                    tmpLocal.push_back(j);
+            // Current max accuracy at feature selection depth.
+            double depthMaxAccuracy = 0;
+            // The current set of best features at this depth.
+            vector<int> depthBestFeatures;
+
+            for (int featureNum = 1; featureNum < numFeatures; ++featureNum) {
+                vector<vector<double>> reducedData;
+                reducedData.reserve(bestFeatures.size() + 2);
+
+                reducedData.push_back(dataset.at(0));
+
+                for (int featureIdx : bestFeatures) {
+                    reducedData.push_back(dataset.at(featureIdx));
+                }
+
+                // If the feature is not in the best feature list, then explore it
+                if (find(bestFeatures.begin(), bestFeatures.end(), featureNum) == bestFeatures.end()) {
+                    reducedData.push_back(dataset.at(featureNum));
+
                     cout << "Using feature(s) { ";
-                    for (int i = 0; i < tmpLocal.size(); i++) {
-                        cout << tmpLocal.at(i);
-                        if (i < tmpLocal.size() - 1) { cout << ", "; }
+                    for (int featureIdx : bestFeatures) {
+                        cout << featureIdx << ", ";
                     }
-                    accuracy = leaveOneOutValidator(tmp);
+                    cout << featureNum;
+
+                    double accuracy = leaveOneOutValidator(reducedData);
                     cout << " } accuracy is " << accuracy << "%" << endl;
-                    if (accuracy > localmax) {
-                        localmax = accuracy;
-                        tmpMax = tmpLocal;
+
+                    if (accuracy > depthMaxAccuracy) {
+                        depthMaxAccuracy = accuracy;
+       
+                        depthBestFeatures = bestFeatures;
+                        depthBestFeatures.push_back(featureNum);
                     }
                 }
             }
-            localBest = tmpMax;
-            displayLocal(localBest, localmax);
-            if (localmax > max) {
-                bestFeatures = localBest;
-                max = localmax;
-                localBest = bestFeatures;
-            } else if (localmax < max) {
+
+            displayLocal(depthBestFeatures, depthMaxAccuracy);
+            if (depthMaxAccuracy > maxAccuracy) {
+                bestFeatures = depthBestFeatures;
+                maxAccuracy = depthMaxAccuracy;
+            } else if (depthMaxAccuracy < maxAccuracy) {
                 cout << "Warning! Accuracy has decreased! Continuing search in case of local maxima." << endl;
                 break;
             }
         }
-        displayBest(bestFeatures, max);
+
+        displayBest(bestFeatures, maxAccuracy);
     }
 
     void backward_elimination() {
@@ -170,52 +213,58 @@ public:
         displayBest(bestFeatures, max);
     }
 
+    // Normalize the data via min-max normalization on each feature.
     static void normalizeData() {
         cout << endl << "Please wait while I normalize the data ... ";
-        vector<pair<double, double>> normData;
-        for (auto &i: dataset) {
+        for (auto& features: dataset) {
+            // Compute the min and max on the feature
             double min = INFINITY;
             double max = -1.0 * INFINITY;
-            for (double j: i) {
-                if (j < min) min = j;
-                if (j > max) max = j;
+            for (double instance : features) {
+                if (instance < min) min = instance;
+                if (instance > max) max = instance;
             }
-            normData.emplace_back(min, max);
-        }
-        for (int i = 0; i < dataset.size(); i++) {
-            for (int j = 0; j < dataset.at(i).size(); j++) {
-                dataset.at(i).at(j) =
-                        (dataset.at(i).at(j) - normData.at(i).first) / (normData.at(i).second - normData.at(i).first);
+            // Apply normalization to the feature
+            double denom = max - min;
+            for (double& instance : features) {
+                instance = (instance - min) / denom;
             }
         }
+
         cout << "Done!" << endl << endl;
     }
 
     static double defaultRate() {
-        double accuracy;
-        int numClass1 = 0;
-        int numClass2 = 0;
+        int numClass1, numClass2;
+        
+        vector<double>& class_labels = dataset.at(0);
 
-        for (double i: dataset.at(0)) {
-            if (i == 1) numClass1++;
-            else numClass2++;
+        for (const double class_label : class_labels) {
+            if (class_label == 1)
+                numClass1++;
+            else
+                numClass2++;
         }
-        if (numClass1 > numClass2) accuracy = 100.0 * (double) numClass1 / dataset.at(0).size();
-        else accuracy = 100.0 * (double) numClass2 / dataset.at(0).size();
+
+        int biggestClass = max(numClass1, numClass2);
+        double accuracy = 100.0 * (static_cast<double>(biggestClass) / class_labels.size());
+
         return accuracy;
     }
 
     void search(int choice) {
         cout << "This dataset has " << getSize() << " features (not including the class attribute), with "
              << dataset.at(0).size() << " instances." << endl;
+
         normalizeData();
+
         if (choice == 1) {
             cout
                     << "Running nearest neighbor with no features (default rate), using \"leaving-one-out\" evaluation, I get an accuracy of "
                     << defaultRate() << "%" << endl
                     << endl;
             cout << "Beginning search." << endl << endl;
-            forward_selection();
+            new_forward_selection();
         } else if (choice == 2) {
             cout
                     << "Running nearest neighbor with ALL features, using \"leaving-one-out\" evaluation, I get an accuracy of "
