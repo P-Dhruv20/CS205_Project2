@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "project.h"
+#include "preprocess.h"
 
 using namespace std;
 
@@ -37,13 +38,17 @@ vector<vector<double>> read_data(ifstream& file_stream) {
 
 int main() {
     int numFeat, choice = 0;
+
+    preprocess();
     string filename;
     ifstream file;
 
-    cout << "Welcome to Dhruv Parmar's Feature Selection Algorithm." << endl;
+    cout << "Welcome to Feature Selection Algorithm." << endl;
     cout << endl;
-    cout << "Type in the name of the dataset to test: " << endl;
-    cin >> filename;
+//    cout << "Type in the name of the dataset to test: " << endl;
+//    cin >> filename;
+    filename = "../data/CS170_small_Data__32.txt";
+
     cout << endl << "Type the number of the algorithm you want to run." << endl;
     cout << "1. Forward Selection" << endl;
     cout << "2. Backward Elimination" << endl;
