@@ -26,7 +26,7 @@ public:
         srand(time(NULL));
     }
 
-    static int nearest_neighbor(vector<double> queryInstance, vector<vector<double>> data) {
+    static int nearest_neighbor(const vector<double>& queryInstance, const vector<vector<double>>& data) {
         double minDistance = 0.0;
         int classification = static_cast<int>(queryInstance.at(0));
         const int numInstances = data.at(0).size();
@@ -50,12 +50,14 @@ public:
         return classification;
     }
 
-    static double leaveOneOutValidator(vector<vector<double> > currData) {
+    // Performs leave one out validation (w/ k = 1)
+    // Returns the number of correct predictions.
+    static int leaveOneOutValidator(const vector<vector<double>>& currData, int wrongLimit) {
         const int numInstances = currData.at(0).size();
 
         vector<vector<double>> instance_subset;
         vector<double> testInstance;
-        int numCorrect = 0;
+        int numWrong = 0;
 
         for (int leftOutRowIdx = 0; leftOutRowIdx < numInstances; leftOutRowIdx++) {
             for (const auto& column : currData) {
@@ -77,15 +79,18 @@ public:
             const int predictedClass = nearest_neighbor(testInstance, instance_subset);
             const int expectedClass = static_cast<int>(testInstance.at(0));
 
-            if (predictedClass == expectedClass) {
-                 numCorrect++;
+            if (predictedClass != expectedClass) {
+                 numWrong++;
+                 if (numWrong > wrongLimit) {
+                    break;
+                 }
             }
 
             instance_subset.clear();
             testInstance.clear();
         }
 
-        return (numCorrect / static_cast<double>(numInstances)) * 100.00;
+        return numInstances - numWrong;
     }
 
     static void displayLocal(vector<int> localBest, double localmax) {
@@ -108,16 +113,21 @@ public:
 
     void forward_selection() {
         const int numFeatures = dataset.size();
+        const int numInstances = dataset.at(0).size();
         vector<int> bestFeatures;
 
-        double maxAccuracy = 0;
+        int maxCorrect = 0;
         for (int depth = 1; depth < numFeatures; ++depth) {
             cout << "Exploring accuracy of NN with " << depth << " features!" << endl;
 
-            // Current max accuracy at feature selection depth.
-            double depthMaxAccuracy = 0;
+            // Current max correctly predicted instances at feature selection depth.
+            int depthMaxCorrect = 0;
             // The current set of best features at this depth.
             vector<int> depthBestFeatures;
+
+            // Early abandon leave-one-out tests that 
+            // exceed the wrong prediction threshold.
+            const int wrongLimit = numInstances - maxCorrect;
 
             for (int featureNum = 1; featureNum < numFeatures; ++featureNum) {
                 vector<vector<double>> reducedData;
@@ -139,11 +149,19 @@ public:
                     }
                     cout << featureNum;
 
-                    double accuracy = leaveOneOutValidator(reducedData);
-                    cout << " } accuracy is " << accuracy << "%" << endl;
+                    const int numCorrect = leaveOneOutValidator(reducedData, wrongLimit);
 
-                    if (accuracy > depthMaxAccuracy) {
-                        depthMaxAccuracy = accuracy;
+                    const double accuracy = (100.0 * (numCorrect / static_cast<double>(numInstances)));
+                    cout << " } accuracy is " << accuracy << "%";
+
+                    if (numCorrect <= maxCorrect) {
+                        cout << " (Early Abandoned)";
+                    }
+
+                    cout << endl;
+
+                    if (numCorrect > depthMaxCorrect) {
+                        depthMaxCorrect = numCorrect;
        
                         depthBestFeatures = bestFeatures;
                         depthBestFeatures.push_back(featureNum);
@@ -151,17 +169,17 @@ public:
                 }
             }
 
-            displayLocal(depthBestFeatures, depthMaxAccuracy);
-            if (depthMaxAccuracy > maxAccuracy) {
+            displayLocal(depthBestFeatures, (100.0 * (depthMaxCorrect / static_cast<double>(numInstances))));
+            if (depthMaxCorrect > maxCorrect) {
                 bestFeatures = depthBestFeatures;
-                maxAccuracy = depthMaxAccuracy;
-            } else if (depthMaxAccuracy < maxAccuracy) {
+                maxCorrect = depthMaxCorrect;
+            } else if (depthMaxCorrect < maxCorrect) {
                 cout << "Warning! Accuracy has decreased! Continuing search in case of local maxima." << endl;
                 break;
             }
         }
 
-        displayBest(bestFeatures, maxAccuracy);
+        displayBest(bestFeatures, (100.0 * (maxCorrect / static_cast<double>(numInstances))));
     }
 
     void backward_elimination() {
@@ -192,7 +210,7 @@ public:
                         cout << tmpLocal.at(i);
                         if (i < tmpLocal.size() - 1) { cout << ", "; }
                     }
-                    accuracy = leaveOneOutValidator(tmp);
+                    accuracy = leaveOneOutValidator(tmp, 1000); // TODO FIX
                     cout << " } accuracy is " << accuracy << "%" << endl;
                     if (accuracy >= localmax) {
                         localmax = accuracy;
@@ -264,11 +282,11 @@ public:
                     << defaultRate() << "%" << endl
                     << endl;
             cout << "Beginning search." << endl << endl;
-            new_forward_selection();
+            forward_selection();
         } else if (choice == 2) {
             cout
                     << "Running nearest neighbor with ALL features, using \"leaving-one-out\" evaluation, I get an accuracy of "
-                    << leaveOneOutValidator(dataset) << "%" << endl
+                    << leaveOneOutValidator(dataset, static_cast<int>(dataset.at(0).size())) << "%" << endl
                     << endl;
             cout << "Beginning search." << endl << endl;
             backward_elimination();
