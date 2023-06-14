@@ -7,31 +7,29 @@
 
 using namespace std;
 
-// Retrieves the dataset column-major wise.
-// I.e. the outer vector refers to the features, the inner vector refers to the rows.
+// Retrieves the dataset row-major wise.
+// I.e. the outer vector refers to the rows, the inner vector refers to the features.
 vector<vector<double>> read_data(ifstream& file_stream) {
     vector<vector<double>> dataset; 
 
-    // Preload the dataset with the feature vectors
-    string line;
-    {
-        string feature;
-        getline(file_stream, line);
-        std::stringstream sstream(line);
-        while (sstream >> feature) {
-            dataset.push_back(vector<double>{ static_cast<double>(stold(feature)) });
-        }
-    }
+    int numFeatures = -1;
 
     // Put instances into the dataset vector
+    string line;
     while (getline(file_stream, line)) {
         std::stringstream sstream(line);
-        for (auto& column: dataset) {
-            string column_val;
-            if (sstream >> column_val) {
-                 column.push_back(stold(column_val));
-            }
+        string feature;
+        vector<double> row;
+        if (numFeatures > 0)
+            row.reserve(numFeatures);
+
+        while (sstream >> feature) {
+            row.push_back(static_cast<double>(stold(feature)));
         }
+        dataset.push_back(row);
+
+        if (numFeatures < 0)
+            numFeatures = row.size();
     }
 
     return dataset;
@@ -62,7 +60,7 @@ int main() {
     dataset = read_data(fileRead);
     fileRead.close();
 
-    numFeat = dataset.size() - 1;
+    numFeat = dataset.at(0).size() - 1;
     Project project = Project(numFeat);
     project.search(choice);
     return 0;

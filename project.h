@@ -26,15 +26,20 @@ public:
         srand(time(NULL));
     }
 
-    static int nearest_neighbor(const vector<double>& queryInstance, const vector<vector<double>>& data) {
+    // Expects data in row-major order
+    static int nearest_neighbor(const int queryIdx, const vector<int>& features) {
         double minDistance = 0.0;
-        int classification = static_cast<int>(queryInstance.at(0));
-        const int numInstances = data.at(0).size();
+        const vector<double>& queryInstance = dataset.at(queryIdx);
+        int classification = static_cast<int>(dataset.at(queryIdx).at(0));
+        const int numInstances = dataset.size();
 
         for (int rowIdx = 0; rowIdx < numInstances; rowIdx++) {
+            if (rowIdx == queryIdx)
+                continue;
+
             double distance = 0.0;
-            for (int featureIdx = 1; featureIdx < data.size(); featureIdx++) {
-                 const double featureDist = data.at(featureIdx).at(rowIdx) - queryInstance.at(featureIdx);
+            for (int featureIdx : features) {
+                 const double featureDist = dataset.at(rowIdx).at(featureIdx) - queryInstance.at(featureIdx);
                  distance += featureDist * featureDist;
             }
 
@@ -43,7 +48,7 @@ public:
             }
             else if (distance < minDistance) {
                 minDistance = distance;
-                classification = static_cast<int>(data.at(0).at(rowIdx));
+                classification = static_cast<int>(dataset.at(rowIdx).at(0));
             }
         }
 
@@ -52,48 +57,29 @@ public:
 
     // Performs leave one out validation (w/ k = 1)
     // Returns the number of correct predictions.
-    static int leaveOneOutValidator(const vector<vector<double>>& currData, int wrongLimit) {
-        const int numInstances = currData.at(0).size();
+    static int leaveOneOutValidator(const vector<int>& features, int wrongLimit) {
+        const int numInstances = dataset.size();
 
-        vector<vector<double>> instance_subset;
-        vector<double> testInstance;
         int numWrong = 0;
 
         for (int leftOutRowIdx = 0; leftOutRowIdx < numInstances; leftOutRowIdx++) {
-            for (const auto& column : currData) {
-                testInstance.push_back(column.at(leftOutRowIdx));
-
-                // Add remaining instances in the colunmn
-                vector<double> columnSubset;
-                columnSubset.reserve(column.size() - 1);
-                for (int row = 0; row < column.size(); row++) {
-                    if (row == leftOutRowIdx)
-                        continue;
-                    
-                    columnSubset.push_back(column.at(row));
-                }
-                
-                instance_subset.emplace_back(std::move(columnSubset));
-            }
-
-            const int predictedClass = nearest_neighbor(testInstance, instance_subset);
-            const int expectedClass = static_cast<int>(testInstance.at(0));
+            const int predictedClass = nearest_neighbor(leftOutRowIdx, features);
+            const int expectedClass = static_cast<int>(dataset.at(leftOutRowIdx).at(0));
 
             if (predictedClass != expectedClass) {
                  numWrong++;
+                 // Implement early abandoning
+                 // If number of wrong 
                  if (numWrong > wrongLimit) {
                     break;
                  }
             }
-
-            instance_subset.clear();
-            testInstance.clear();
         }
 
         return numInstances - numWrong;
     }
 
-    static void displayLocal(vector<int> localBest, double localmax) {
+    static void displayLocal(const vector<int>& localBest, double localmax) {
         cout << "The best feature set is { ";
         for (int i = 0; i < localBest.size(); i++) {
             cout << localBest.at(i);
@@ -102,7 +88,7 @@ public:
         cout << " } with an accuracy of " << localmax << "%" << endl << endl;
     }
 
-    static void displayBest(vector<int> bestFeatures, double max) {
+    static void displayBest(const vector<int>& bestFeatures, double max) {
         cout << endl << "Finished search!! The best feature set is { ";
         for (int i = 0; i < bestFeatures.size(); i++) {
             cout << bestFeatures.at(i);
@@ -112,8 +98,8 @@ public:
     }
 
     void forward_selection() {
-        const int numFeatures = dataset.size();
-        const int numInstances = dataset.at(0).size();
+        const int numFeatures = dataset.at(0).size();
+        const int numInstances = dataset.size();
         vector<int> bestFeatures;
 
         int maxCorrect = 0;
@@ -130,18 +116,10 @@ public:
             const int wrongLimit = numInstances - maxCorrect;
 
             for (int featureNum = 1; featureNum < numFeatures; ++featureNum) {
-                vector<vector<double>> reducedData;
-                reducedData.reserve(bestFeatures.size() + 2);
-
-                reducedData.push_back(dataset.at(0));
-
-                for (int featureIdx : bestFeatures) {
-                    reducedData.push_back(dataset.at(featureIdx));
-                }
-
                 // If the feature is not in the best feature list, then explore it
                 if (find(bestFeatures.begin(), bestFeatures.end(), featureNum) == bestFeatures.end()) {
-                    reducedData.push_back(dataset.at(featureNum));
+                    vector<int> currFeatures = bestFeatures;
+                    currFeatures.push_back(featureNum);
 
                     cout << "Using feature(s) { ";
                     for (int featureIdx : bestFeatures) {
@@ -149,9 +127,9 @@ public:
                     }
                     cout << featureNum;
 
-                    const int numCorrect = leaveOneOutValidator(reducedData, wrongLimit);
+                    const int numCorrect = leaveOneOutValidator(currFeatures, wrongLimit);
 
-                    const double accuracy = (100.0 * (numCorrect / static_cast<double>(numInstances)));
+                    const double accuracy = (100.0 * (numCorrect / static_cast<double>(numInstances - 1)));
                     cout << " } accuracy is " << accuracy << "%";
 
                     if (numCorrect <= maxCorrect) {
@@ -169,7 +147,7 @@ public:
                 }
             }
 
-            displayLocal(depthBestFeatures, (100.0 * (depthMaxCorrect / static_cast<double>(numInstances))));
+            displayLocal(depthBestFeatures, (100.0 * (depthMaxCorrect / static_cast<double>(numInstances - 1))));
             if (depthMaxCorrect > maxCorrect) {
                 bestFeatures = depthBestFeatures;
                 maxCorrect = depthMaxCorrect;
@@ -210,7 +188,7 @@ public:
                         cout << tmpLocal.at(i);
                         if (i < tmpLocal.size() - 1) { cout << ", "; }
                     }
-                    accuracy = leaveOneOutValidator(tmp, 1000); // TODO FIX
+                    accuracy = leaveOneOutValidator({ 1, 2, 3 }, 1000); // TODO FIX
                     cout << " } accuracy is " << accuracy << "%" << endl;
                     if (accuracy >= localmax) {
                         localmax = accuracy;
@@ -233,19 +211,28 @@ public:
 
     // Normalize the data via min-max normalization on each feature.
     static void normalizeData() {
-        cout << endl << "Please wait while I normalize the data ... ";
-        for (auto& features: dataset) {
-            // Compute the min and max on the feature
-            double min = INFINITY;
-            double max = -1.0 * INFINITY;
-            for (double instance : features) {
-                if (instance < min) min = instance;
-                if (instance > max) max = instance;
+        cout << endl << "Please wait while I normalize the data ... ";\
+        const int numFeatures = dataset.at(0).size();
+        // Vector of the minimum and maximum for each feature
+        vector<pair<double, double>> featureMinMax(numFeatures - 1, { INFINITY, -1 * INFINITY });
+
+        // Go through dataset and find actual min & max for each feature
+        for (const vector<double>& row : dataset) {
+            for (int featureIdx = 1; featureIdx < numFeatures; ++featureIdx) {
+                const double featureVal = row.at(featureIdx);
+                auto& [min, max] = featureMinMax.at(featureIdx - 1);
+                
+                if (featureVal < min) min = featureVal;
+                if (featureVal > max) max = featureVal;
             }
-            // Apply normalization to the feature
-            double denom = max - min;
-            for (double& instance : features) {
-                instance = (instance - min) / denom;
+        }
+
+        // Go through dataset again and apply min max normalization
+        for (vector<double>& row : dataset) {
+            for (int featureIdx = 1; featureIdx < numFeatures; ++featureIdx) {
+                double& featureVal = row.at(featureIdx);
+                const auto& [min, max] = featureMinMax.at(featureIdx - 1);
+                featureVal = (featureVal - min) / (max - min);
             }
         }
 
@@ -253,11 +240,10 @@ public:
     }
 
     static double defaultRate() {
-        int numClass1, numClass2;
-        
-        vector<double>& class_labels = dataset.at(0);
+        int numClass1 = 0, numClass2 = 0;
 
-        for (const double class_label : class_labels) {
+        for (const vector<double>& row : dataset) {
+            const double class_label = row.at(0);
             if (class_label == 1)
                 numClass1++;
             else
@@ -265,14 +251,17 @@ public:
         }
 
         int biggestClass = max(numClass1, numClass2);
-        double accuracy = 100.0 * (static_cast<double>(biggestClass) / class_labels.size());
+        double accuracy = 100.0 * (static_cast<double>(biggestClass) / dataset.size());
 
         return accuracy;
     }
 
     void search(int choice) {
-        cout << "This dataset has " << getSize() << " features (not including the class attribute), with "
-             << dataset.at(0).size() << " instances." << endl;
+        const int numRows = dataset.size();
+        const int numFeatures = dataset.at(0).size();
+
+        cout << "This dataset has " << (numFeatures - 1) << " features (not including the class attribute), with "
+             << numRows << " instances." << endl;
 
         normalizeData();
 
@@ -284,9 +273,12 @@ public:
             cout << "Beginning search." << endl << endl;
             forward_selection();
         } else if (choice == 2) {
+            std::vector<int> allFeatures(numFeatures - 1);
+            std::iota(allFeatures.begin(), allFeatures.end(), 1);
+
             cout
                     << "Running nearest neighbor with ALL features, using \"leaving-one-out\" evaluation, I get an accuracy of "
-                    << leaveOneOutValidator(dataset, static_cast<int>(dataset.at(0).size())) << "%" << endl
+                    << leaveOneOutValidator(allFeatures, numRows) << "%" << endl
                     << endl;
             cout << "Beginning search." << endl << endl;
             backward_elimination();
