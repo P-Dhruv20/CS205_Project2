@@ -79,6 +79,32 @@ public:
         return numInstances - numWrong;
     }
 
+    // Performs leave-one-out validation but moves the instances
+    // that were predicted wrong to the top
+    static void reorderDataset(const vector<int>& features) {
+        const int numInstances = dataset.size();
+
+        vector<int> mispredictedInstances;
+
+        for (int leftOutRowIdx = 0; leftOutRowIdx < numInstances; leftOutRowIdx++) {
+            const int predictedClass = nearest_neighbor(leftOutRowIdx, features);
+            const int expectedClass = static_cast<int>(dataset.at(leftOutRowIdx).at(0));
+
+            if (predictedClass != expectedClass) {
+                mispredictedInstances.push_back(leftOutRowIdx);
+            }
+        }
+
+        // Swapping works because the mispredicted indexes
+        // are guranteed to be in order.
+        int swapIdx = 0;
+        for (int mispredictedIdx : mispredictedInstances) {
+            vector<double> temp = std::move(dataset.at(swapIdx));
+            dataset.at(swapIdx) = std::move(dataset.at(mispredictedIdx));
+            dataset.at(mispredictedIdx) = std::move(temp);
+        }
+    }
+
     static void displayLocal(const vector<int>& localBest, double localmax) {
         cout << "The feature set best at this depth is { ";
         for (int i = 0; i < localBest.size(); i++) {
@@ -106,6 +132,11 @@ public:
         for (int depth = 1; depth < numFeatures; ++depth) {
             cout << "Exploring accuracy of NN with " << depth << " features!" << endl;
 
+            if (depth > 1) {
+                reorderDataset(bestFeatures);
+                cout << "Re-ordered dataset for quicker early abandoning!" << endl;
+            }
+
             // Current max correctly predicted instances at feature selection depth.
             int depthMaxCorrect = 0;
             // The current set of best features at this depth.
@@ -125,17 +156,17 @@ public:
                     for (int featureIdx : bestFeatures) {
                         cout << featureIdx << ", ";
                     }
-                    cout << featureNum;
+                    cout << featureNum << " } ";
 
                     const int numCorrect = leaveOneOutValidator(currFeatures, wrongLimit);
 
                     const double accuracy = (100.0 * (numCorrect / static_cast<double>(numInstances - 1)));
-                    cout << " } accuracy is " << accuracy << "%";
-
                     if (numCorrect <= maxCorrect) {
-                        cout << " (Early Abandoned)";
+                        cout << "was early abandoned.";
                     }
-
+                    else {
+                        cout << "accuracy is " << accuracy << "%";
+                    }
                     cout << endl;
 
                     if (numCorrect > depthMaxCorrect) {
@@ -173,6 +204,11 @@ public:
             int depthMaxCorrect = 0;
             vector<int> depthBestFeatures;
 
+            if (depth > 1) {
+                reorderDataset(bestFeatures);
+                cout << "Re-ordered dataset for quicker early abandoning!" << endl;
+            }
+
             const int wrongLimit = numInstances - maxCorrect;
             for (const int rmFeatureNum : bestFeatures) {
                 vector<int> currFeatures;
@@ -186,14 +222,17 @@ public:
                     cout << " " << featureNum;
                     currFeatures.push_back(featureNum);
                 }
+                cout << " } ";
 
                 const int numCorrect = leaveOneOutValidator(currFeatures, wrongLimit);
                 const double accuracy = (100.0 * (numCorrect / static_cast<double>(numInstances - 1)));
-                cout << " } accuracy is " << accuracy << "%";
-
                 if (numCorrect <= maxCorrect) {
-                    cout << " (Early Abandoned)";
+                    cout << "was early abandoned.";
                 }
+                else {
+                    cout << "accuracy is " << accuracy << "%";
+                }
+
                 cout << endl;
 
                 if (numCorrect > depthMaxCorrect) {
