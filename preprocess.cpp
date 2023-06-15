@@ -11,6 +11,9 @@ int main()
     ofstream outputFile("../data/processed_breast-cancer.csv");
     string line;
 
+    // Skip the first row
+    getline(inputFile, line);
+
     while (getline(inputFile, line))
     {
         istringstream iss(line);
