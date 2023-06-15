@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <string>
+
 #include "project.h"
 
 using namespace std;
@@ -59,11 +60,10 @@ int main() {
         return -1;
     }
 
-    dataset = read_data(fileRead);
+    auto dataset = read_data(fileRead);
     fileRead.close();
 
-    numFeat = dataset.at(0).size() - 1;
-    Project project = Project(numFeat);
+    Project project = Project(dataset);
     project.search(choice);
     return 0;
 }
