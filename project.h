@@ -80,7 +80,7 @@ public:
     }
 
     static void displayLocal(const vector<int>& localBest, double localmax) {
-        cout << "The best feature set is { ";
+        cout << "The feature set best at this depth is { ";
         for (int i = 0; i < localBest.size(); i++) {
             cout << localBest.at(i);
             if (i < localBest.size() - 1) { cout << ", "; }
@@ -161,52 +161,60 @@ public:
     }
 
     void backward_elimination() {
-        vector<int> bestFeatures(getSize());
+        const int numInstances = dataset.size();
+        const int numFeatures = dataset.at(0).size();
+
+        vector<int> bestFeatures(numFeatures - 1);
         std::iota(bestFeatures.begin(), bestFeatures.end(), 1);
-        vector<int> localBest = bestFeatures;
-        double accuracy, max = 0.0;
 
-        for (int i = 1; i < getSize(); i++) {
-            double localmax = 0.0;
-            vector<int> tmpMax;
-            for (int j = 0; j <= getSize(); j++) {
-                vector<vector<double>> tmp;
-                vector<int> tmpLocal;
-                tmp.push_back(dataset.at(0));
-                tmpLocal = localBest;
+        int maxCorrect = 0;
 
-                for (int x: localBest) {
-                    tmp.push_back(dataset.at(x));
+        for (int depth = 1; depth < numFeatures; ++depth) {
+            int depthMaxCorrect = 0;
+            vector<int> depthBestFeatures;
+
+            const int wrongLimit = numInstances - maxCorrect;
+            for (const int rmFeatureNum : bestFeatures) {
+                vector<int> currFeatures;
+                currFeatures.reserve(bestFeatures.size() - 1);
+                cout << "Using feature(s) {";
+                for (int featureNum : bestFeatures) {
+                    if (rmFeatureNum ==  featureNum) {
+                        continue;
+                    }
+
+                    cout << " " << featureNum;
+                    currFeatures.push_back(featureNum);
                 }
-                auto it = find(tmpLocal.begin(), tmpLocal.end(), j);
-                if (it != tmpLocal.end()) {
-                    int index = it - tmpLocal.begin() + 1;
-                    tmpLocal.erase(it);
-                    tmp.erase(tmp.begin() + index);
-                    cout << "Using feature(s) { ";
-                    for (int i = 0; i < tmpLocal.size(); i++) {
-                        cout << tmpLocal.at(i);
-                        if (i < tmpLocal.size() - 1) { cout << ", "; }
-                    }
-                    accuracy = leaveOneOutValidator({ 1, 2, 3 }, 1000); // TODO FIX
-                    cout << " } accuracy is " << accuracy << "%" << endl;
-                    if (accuracy >= localmax) {
-                        localmax = accuracy;
-                        tmpMax = tmpLocal;
-                    }
+
+                const int numCorrect = leaveOneOutValidator(currFeatures, wrongLimit);
+                const double accuracy = (100.0 * (numCorrect / static_cast<double>(numInstances - 1)));
+                cout << " } accuracy is " << accuracy << "%";
+
+                if (numCorrect <= maxCorrect) {
+                    cout << " (Early Abandoned)";
+                }
+                cout << endl;
+
+                if (numCorrect > depthMaxCorrect) {
+                    depthMaxCorrect = numCorrect;
+                    depthBestFeatures = currFeatures;
                 }
             }
-            localBest = tmpMax;
-            displayLocal(localBest, localmax);
-            if (localmax > max) {
-                bestFeatures = localBest;
-                max = localmax;
-            } else if (localmax < max) {
+
+            const double depthBestAccuracy = (100.0 * (depthMaxCorrect / static_cast<double>(numInstances - 1)));
+            displayLocal(depthBestFeatures, depthBestAccuracy);
+            if (depthMaxCorrect > maxCorrect) {
+                bestFeatures = depthBestFeatures;
+                maxCorrect = depthMaxCorrect;
+            } else if (depthMaxCorrect < maxCorrect) {
                 cout << "Warning! Accuracy has decreased! Continuing search in case of local maxima." << endl;
                 break;
             }
         }
-        displayBest(bestFeatures, max);
+
+        const double bestAccuracy = (100.0 * (maxCorrect / static_cast<double>(numInstances - 1)));
+        displayBest(bestFeatures, bestAccuracy);
     }
 
     // Normalize the data via min-max normalization on each feature.

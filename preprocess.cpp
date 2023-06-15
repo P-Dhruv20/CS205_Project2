@@ -1,6 +1,3 @@
-#ifndef CS205_PROJECT2_PREPROCESS_H
-#define CS205_PROJECT2_PREPROCESS_H
-
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -8,7 +5,7 @@
 
 using namespace std;
 
-void preprocess()
+int main()
 {
     ifstream inputFile("../data/breast-cancer.csv");
     ofstream outputFile("../data/processed_breast-cancer.csv");
@@ -63,6 +60,3 @@ void preprocess()
     outputFile.close();
 
 }
-
-
-#endif //CS205_PROJECT2_PREPROCESS_H
