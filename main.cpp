@@ -59,7 +59,7 @@ int main()
     cin >> choice;
     cout << endl;
 
-    filename = "../data/" + filename;
+//    filename = "../data/" + filename;
 
     ifstream fileRead;
     fileRead.open(filename.c_str());
@@ -78,7 +78,7 @@ int main()
     const auto end = chrono::high_resolution_clock::now();
 
     const auto durationMS = chrono::duration_cast<chrono::milliseconds>(end - start).count();
-    cout << "Search completed in " << (durationMS / 1000) << "s and " << (durationMS % 1000) << "ms" << endl;
+    cout << "Search completed in " << (durationMS / 1000) << "." << (durationMS % 1000) << " seconds." << endl;
 
     return 0;
 }

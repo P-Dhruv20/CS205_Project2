@@ -1,0 +1,90 @@
+Welcome to Feature Selection Algorithm.
+
+Type in the name of the dataset to test:
+CS170_large_Data__20.txt
+
+Type the number of the algorithm you want to run.
+1. Forward Selection
+2. Backward Elimination
+1
+
+This dataset has 20 features (not including the class attribute), with 2000 instances.
+
+Please wait while I normalize the data ... Done!
+
+Running nearest neighbor with no features (default rate), using "leaving-one-out" evaluation, I get an accuracy of 80.75%
+
+Beginning search.
+
+Exploring accuracy of NN with 1 features!
+Using feature(s) { 1 } accuracy is 68.2841%
+Using feature(s) { 2 } accuracy is 67.6838%
+Using feature(s) { 3 } accuracy is 70.1851%
+Using feature(s) { 4 } accuracy is 68.1841%
+Using feature(s) { 5 } accuracy is 69.3847%
+Using feature(s) { 6 } accuracy is 70.2351%
+Using feature(s) { 7 } accuracy is 69.2846%
+Using feature(s) { 8 } accuracy is 70.3852%
+Using feature(s) { 9 } accuracy is 68.7344%
+Using feature(s) { 10 } accuracy is 68.2341%
+Using feature(s) { 11 } accuracy is 69.3347%
+Using feature(s) { 12 } accuracy is 68.4842%
+Using feature(s) { 13 } accuracy is 84.4422%
+Using feature(s) { 14 } accuracy is 67.7339%
+Using feature(s) { 15 } accuracy is 68.6843%
+Using feature(s) { 16 } accuracy is 74.2371%
+Using feature(s) { 17 } accuracy is 69.6348%
+Using feature(s) { 18 } accuracy is 68.2341%
+Using feature(s) { 19 } accuracy is 68.6843%
+Using feature(s) { 20 } accuracy is 67.984%
+The feature set best at this depth is { 13 } with an accuracy of 84.4422%
+
+Exploring accuracy of NN with 2 features!
+Re-ordered dataset for quicker early abandoning!
+Using feature(s) { 13, 1 } was early abandoned.
+Using feature(s) { 13, 2 } accuracy is 84.9925%
+Using feature(s) { 13, 3 } was early abandoned.
+Using feature(s) { 13, 4 } was early abandoned.
+Using feature(s) { 13, 5 } was early abandoned.
+Using feature(s) { 13, 6 } accuracy is 86.2431%
+Using feature(s) { 13, 7 } accuracy is 84.6923%
+Using feature(s) { 13, 8 } was early abandoned.
+Using feature(s) { 13, 9 } was early abandoned.
+Using feature(s) { 13, 10 } was early abandoned.
+Using feature(s) { 13, 11 } accuracy is 86.093%
+Using feature(s) { 13, 12 } was early abandoned.
+Using feature(s) { 13, 14 } was early abandoned.
+Using feature(s) { 13, 15 } accuracy is 84.5423%
+Using feature(s) { 13, 16 } accuracy is 98.099%
+Using feature(s) { 13, 17 } accuracy is 84.4922%
+Using feature(s) { 13, 18 } was early abandoned.
+Using feature(s) { 13, 19 } was early abandoned.
+Using feature(s) { 13, 20 } accuracy is 85.6428%
+The feature set best at this depth is { 13, 16 } with an accuracy of 98.099%
+
+Exploring accuracy of NN with 3 features!
+Re-ordered dataset for quicker early abandoning!
+Using feature(s) { 13, 16, 1 } was early abandoned.
+Using feature(s) { 13, 16, 2 } was early abandoned.
+Using feature(s) { 13, 16, 3 } was early abandoned.
+Using feature(s) { 13, 16, 4 } was early abandoned.
+Using feature(s) { 13, 16, 5 } was early abandoned.
+Using feature(s) { 13, 16, 6 } was early abandoned.
+Using feature(s) { 13, 16, 7 } was early abandoned.
+Using feature(s) { 13, 16, 8 } was early abandoned.
+Using feature(s) { 13, 16, 9 } was early abandoned.
+Using feature(s) { 13, 16, 10 } was early abandoned.
+Using feature(s) { 13, 16, 11 } was early abandoned.
+Using feature(s) { 13, 16, 12 } was early abandoned.
+Using feature(s) { 13, 16, 14 } was early abandoned.
+Using feature(s) { 13, 16, 15 } was early abandoned.
+Using feature(s) { 13, 16, 17 } was early abandoned.
+Using feature(s) { 13, 16, 18 } was early abandoned.
+Using feature(s) { 13, 16, 19 } was early abandoned.
+Using feature(s) { 13, 16, 20 } was early abandoned.
+The feature set best at this depth is { 13, 16, 1 } with an accuracy of 98.049%
+
+Warning! Accuracy has decreased! Continuing search in case of local maxima.
+
+Finished search!! The best feature set is { 13, 16 }, with an accuracy of 98.099%
+Search completed in 6.217 seconds.

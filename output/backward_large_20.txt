@@ -1,0 +1,127 @@
+Welcome to Feature Selection Algorithm.
+
+Type in the name of the dataset to test:
+CS170_large_Data__20.txt
+
+Type the number of the algorithm you want to run.
+1. Forward Selection
+2. Backward Elimination
+2
+
+This dataset has 20 features (not including the class attribute), with 2000 instances.
+
+Please wait while I normalize the data ... Done!
+
+Running nearest neighbor with ALL features, using "leaving-one-out" evaluation, I get an accuracy of 69.6848%
+
+Beginning search.
+
+Using feature(s) { 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 } accuracy is 71.0355%
+Using feature(s) { 1 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 } accuracy is 70.5353%
+Using feature(s) { 1 2 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 } accuracy is 70.7354%
+Using feature(s) { 1 2 3 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 } accuracy is 69.8349%
+Using feature(s) { 1 2 3 4 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 } accuracy is 70.9855%
+Using feature(s) { 1 2 3 4 5 7 8 9 10 11 12 13 14 15 16 17 18 19 20 } accuracy is 70.4352%
+Using feature(s) { 1 2 3 4 5 6 8 9 10 11 12 13 14 15 16 17 18 19 20 } accuracy is 71.8859%
+Using feature(s) { 1 2 3 4 5 6 7 9 10 11 12 13 14 15 16 17 18 19 20 } accuracy is 70.7854%
+Using feature(s) { 1 2 3 4 5 6 7 8 10 11 12 13 14 15 16 17 18 19 20 } accuracy is 69.8349%
+Using feature(s) { 1 2 3 4 5 6 7 8 9 11 12 13 14 15 16 17 18 19 20 } accuracy is 71.2856%
+Using feature(s) { 1 2 3 4 5 6 7 8 9 10 12 13 14 15 16 17 18 19 20 } accuracy is 69.4347%
+Using feature(s) { 1 2 3 4 5 6 7 8 9 10 11 13 14 15 16 17 18 19 20 } accuracy is 70.035%
+Using feature(s) { 1 2 3 4 5 6 7 8 9 10 11 12 14 15 16 17 18 19 20 } accuracy is 68.5843%
+Using feature(s) { 1 2 3 4 5 6 7 8 9 10 11 12 13 15 16 17 18 19 20 } accuracy is 69.6348%
+Using feature(s) { 1 2 3 4 5 6 7 8 9 10 11 12 13 14 16 17 18 19 20 } accuracy is 69.0345%
+Using feature(s) { 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 } accuracy is 70.4352%
+Using feature(s) { 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 } accuracy is 70.2851%
+Using feature(s) { 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 } accuracy is 69.935%
+Using feature(s) { 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 20 } accuracy is 70.085%
+Using feature(s) { 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 } accuracy is 69.3847%
+The feature set best at this depth is { 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 } with an accuracy of 71.8859%
+
+Re-ordered dataset for quicker early abandoning!
+Using feature(s) { 2 3 4 5 6 8 9 10 11 12 13 14 15 16 17 18 19 20 } accuracy is 72.3862%
+Using feature(s) { 1 3 4 5 6 8 9 10 11 12 13 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 4 5 6 8 9 10 11 12 13 14 15 16 17 18 19 20 } accuracy is 72.2361%
+Using feature(s) { 1 2 3 5 6 8 9 10 11 12 13 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 6 8 9 10 11 12 13 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 8 9 10 11 12 13 14 15 16 17 18 19 20 } accuracy is 72.036%
+Using feature(s) { 1 2 3 4 5 6 9 10 11 12 13 14 15 16 17 18 19 20 } accuracy is 72.036%
+Using feature(s) { 1 2 3 4 5 6 8 10 11 12 13 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 11 12 13 14 15 16 17 18 19 20 } accuracy is 72.5363%
+Using feature(s) { 1 2 3 4 5 6 8 9 10 12 13 14 15 16 17 18 19 20 } accuracy is 72.4862%
+Using feature(s) { 1 2 3 4 5 6 8 9 10 11 13 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 10 11 12 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 10 11 12 13 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 10 11 12 13 14 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 10 11 12 13 14 15 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 10 11 12 13 14 15 16 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 10 11 12 13 14 15 16 17 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 10 11 12 13 14 15 16 17 18 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 10 11 12 13 14 15 16 17 18 19 } was early abandoned.
+The feature set best at this depth is { 1, 2, 3, 4, 5, 6, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 } with an accuracy of 72.5363%
+
+Re-ordered dataset for quicker early abandoning!
+Using feature(s) { 2 3 4 5 6 8 9 11 12 13 14 15 16 17 18 19 20 } accuracy is 72.6863%
+Using feature(s) { 1 3 4 5 6 8 9 11 12 13 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 4 5 6 8 9 11 12 13 14 15 16 17 18 19 20 } accuracy is 72.6363%
+Using feature(s) { 1 2 3 5 6 8 9 11 12 13 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 6 8 9 11 12 13 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 8 9 11 12 13 14 15 16 17 18 19 20 } accuracy is 72.5863%
+Using feature(s) { 1 2 3 4 5 6 9 11 12 13 14 15 16 17 18 19 20 } accuracy is 73.0865%
+Using feature(s) { 1 2 3 4 5 6 8 11 12 13 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 12 13 14 15 16 17 18 19 20 } accuracy is 73.3867%
+Using feature(s) { 1 2 3 4 5 6 8 9 11 13 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 11 12 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 11 12 13 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 11 12 13 14 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 11 12 13 14 15 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 11 12 13 14 15 16 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 11 12 13 14 15 16 17 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 11 12 13 14 15 16 17 18 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 11 12 13 14 15 16 17 18 19 } was early abandoned.
+The feature set best at this depth is { 1, 2, 3, 4, 5, 6, 8, 9, 12, 13, 14, 15, 16, 17, 18, 19, 20 } with an accuracy of 73.3867%
+
+Re-ordered dataset for quicker early abandoning!
+Using feature(s) { 2 3 4 5 6 8 9 12 13 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 3 4 5 6 8 9 12 13 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 4 5 6 8 9 12 13 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 5 6 8 9 12 13 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 6 8 9 12 13 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 8 9 12 13 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 9 12 13 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 12 13 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 13 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 12 14 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 12 13 15 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 12 13 14 16 17 18 19 20 } accuracy is 73.7869%
+Using feature(s) { 1 2 3 4 5 6 8 9 12 13 14 15 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 12 13 14 15 16 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 12 13 14 15 16 17 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 12 13 14 15 16 17 18 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 12 13 14 15 16 17 18 19 } was early abandoned.
+The feature set best at this depth is { 1, 2, 3, 4, 5, 6, 8, 9, 12, 13, 14, 16, 17, 18, 19, 20 } with an accuracy of 73.7869%
+
+Re-ordered dataset for quicker early abandoning!
+Using feature(s) { 2 3 4 5 6 8 9 12 13 14 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 3 4 5 6 8 9 12 13 14 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 4 5 6 8 9 12 13 14 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 5 6 8 9 12 13 14 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 6 8 9 12 13 14 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 8 9 12 13 14 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 9 12 13 14 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 12 13 14 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 13 14 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 12 14 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 12 13 16 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 12 13 14 17 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 12 13 14 16 18 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 12 13 14 16 17 19 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 12 13 14 16 17 18 20 } was early abandoned.
+Using feature(s) { 1 2 3 4 5 6 8 9 12 13 14 16 17 18 19 } was early abandoned.
+The feature set best at this depth is { 2, 3, 4, 5, 6, 8, 9, 12, 13, 14, 16, 17, 18, 19, 20 } with an accuracy of 73.7369%
+
+Warning! Accuracy has decreased! Continuing search in case of local maxima.
+
+Finished search!! The best feature set is { 1, 2, 3, 4, 5, 6, 8, 9, 12, 13, 14, 16, 17, 18, 19, 20 }, with an accuracy of 73.7869%
+Search completed in 96.405 seconds.
+
