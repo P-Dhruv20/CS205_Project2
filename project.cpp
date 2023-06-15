@@ -39,8 +39,8 @@ int Project::nearest_neighbor(const int queryIdx, const vector<int>& features) {
     return classification;
 }
 
-    // Performs leave one out validation (w/ k = 1)
-    // Returns the number of correct predictions.
+// Performs leave one out validation (w/ k = 1)
+// Returns the number of correct predictions.
 int Project::leaveOneOutValidator(const vector<int>& features, int wrongLimit) {
     const int numInstances = dataset.size();
 

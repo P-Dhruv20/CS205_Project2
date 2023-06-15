@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include <chrono>
 
 #include "project.h"
 
@@ -64,6 +65,12 @@ int main() {
     fileRead.close();
 
     Project project = Project(dataset);
+    const auto start = chrono::high_resolution_clock::now();
     project.search(choice);
+    const auto end = chrono::high_resolution_clock::now();
+
+    const auto durationMS = chrono::duration_cast<chrono::milliseconds>(end - start).count();
+    cout << "Search completed in " << (durationMS / 1000) << "s and " << (durationMS % 1000) << "ms" << endl;
+
     return 0;
 }
