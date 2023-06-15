@@ -50,7 +50,7 @@ int main()
             outputFile << newRow[i];
             if (i != newRow.size() - 1)
             {
-                outputFile << ",";
+                outputFile << " ";
             }
         }
         outputFile << "\n";
@@ -58,5 +58,4 @@ int main()
 
     inputFile.close();
     outputFile.close();
-
 }
