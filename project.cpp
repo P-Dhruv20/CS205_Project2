@@ -210,7 +210,7 @@ void Project::forward_selection()
         }
     }
 
-    displayBest(bestFeatures, (100.0 * (maxCorrect / static_cast<double>(numInstances))));
+    displayBest(bestFeatures, (100.0 * (maxCorrect / static_cast<double>(numInstances - 1))));
 }
 
 void Project::backward_elimination()
@@ -375,7 +375,7 @@ void Project::search(int choice)
 
         cout
             << "Running nearest neighbor with ALL features, using \"leaving-one-out\" evaluation, I get an accuracy of "
-            << leaveOneOutValidator(allFeatures, numRows) << "%" << endl
+            << 100 * (static_cast<double>(leaveOneOutValidator(allFeatures, numRows)) / (numRows - 1))  << "%" << endl
             << endl;
         cout << "Beginning search." << endl
              << endl;
