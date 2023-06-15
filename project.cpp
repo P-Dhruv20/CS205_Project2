@@ -12,25 +12,26 @@ Project::Project(vector<vector<double>> dataset)
 {
 }
 
+// find class of the nearest neighbor using Euclidean distance
 int Project::nearest_neighbor(const int queryIdx, const vector<int> &features)
 {
     double minDistance = 0.0;
     const vector<double> &queryInstance = dataset.at(queryIdx);
     int classification = static_cast<int>(dataset.at(queryIdx).at(0));
     const int numInstances = dataset.size();
-
+    // loop through all instances except the query instance itself
     for (int rowIdx = 0; rowIdx < numInstances; rowIdx++)
     {
         if (rowIdx == queryIdx)
             continue;
-
+        // find Euclidean distance between query instance and current instance
         double distance = 0.0;
         for (int featureIdx : features)
         {
             const double featureDist = dataset.at(rowIdx).at(featureIdx) - queryInstance.at(featureIdx);
             distance += featureDist * featureDist;
         }
-
+        // if the distance is smaller than the current minimum distance, update the minimum distance
         if (rowIdx == 0)
         {
             minDistance = distance;
@@ -103,6 +104,7 @@ void Project::reorderDataset(const vector<int> &features)
     }
 }
 
+// print the local best feature set and its accuracy at each depth of the search
 void displayLocal(const vector<int> &localBest, double localmax)
 {
     cout << "The feature set best at this depth is { ";
@@ -118,6 +120,7 @@ void displayLocal(const vector<int> &localBest, double localmax)
          << endl;
 }
 
+// print the best feature set and its accuracy at the end of the search
 void displayBest(const vector<int> &bestFeatures, double max)
 {
     cout << endl
@@ -133,6 +136,8 @@ void displayBest(const vector<int> &bestFeatures, double max)
     cout << " }, with an accuracy of " << max << "%" << endl;
 }
 
+// forward selection algorithm for feature selection
+// starts with an empty set of features and adds one feature at a time to the set of features
 void Project::forward_selection()
 {
     const int numFeatures = dataset.at(0).size();
@@ -140,6 +145,7 @@ void Project::forward_selection()
     vector<int> bestFeatures;
 
     int maxCorrect = 0;
+    // loop through all features (except the first one, which is the classification)
     for (int depth = 1; depth < numFeatures; ++depth)
     {
         cout << "Exploring accuracy of NN with " << depth << " features!" << endl;
@@ -158,7 +164,7 @@ void Project::forward_selection()
         // Early abandon leave-one-out tests that
         // exceed the wrong prediction threshold.
         const int wrongLimit = numInstances - maxCorrect;
-
+        // Loop through all features and find the best one to add to the feature set.
         for (int featureNum = 1; featureNum < numFeatures; ++featureNum)
         {
             // If the feature is not in the best feature list, then explore it
@@ -173,10 +179,11 @@ void Project::forward_selection()
                     cout << featureIdx << ", ";
                 }
                 cout << featureNum << " } ";
-
+                // Perform leave-one-out validation on the current feature set to find the accuracy
                 const int numCorrect = leaveOneOutValidator(currFeatures, wrongLimit);
 
                 const double accuracy = (100.0 * (numCorrect / static_cast<double>(numInstances - 1)));
+                // Print the accuracy of the current feature set
                 if (numCorrect <= maxCorrect)
                 {
                     cout << "was early abandoned.";
@@ -186,7 +193,7 @@ void Project::forward_selection()
                     cout << "accuracy is " << accuracy << "%";
                 }
                 cout << endl;
-
+                // If the current accuracy is better than the current max, update the current max and the best feature set at this depth
                 if (numCorrect > depthMaxCorrect)
                 {
                     depthMaxCorrect = numCorrect;
@@ -196,7 +203,7 @@ void Project::forward_selection()
                 }
             }
         }
-
+        // Print the best feature set at this depth and its accuracy
         displayLocal(depthBestFeatures, (100.0 * (depthMaxCorrect / static_cast<double>(numInstances - 1))));
         if (depthMaxCorrect > maxCorrect)
         {
@@ -209,10 +216,12 @@ void Project::forward_selection()
             break;
         }
     }
-
+    // Print the best feature set and its accuracy
     displayBest(bestFeatures, (100.0 * (maxCorrect / static_cast<double>(numInstances - 1))));
 }
 
+// backward elimination algorithm for feature selection (opposite of forward selection)
+// starts with all features and removes one feature at a time from the set of features
 void Project::backward_elimination()
 {
     const int numInstances = dataset.size();
@@ -222,7 +231,7 @@ void Project::backward_elimination()
     std::iota(bestFeatures.begin(), bestFeatures.end(), 1);
 
     int maxCorrect = 0;
-
+    // loop through all features (except the first one, which is the classification)
     for (int depth = 1; depth < numFeatures; ++depth)
     {
         int depthMaxCorrect = 0;
@@ -235,6 +244,7 @@ void Project::backward_elimination()
         }
 
         const int wrongLimit = numInstances - maxCorrect;
+        // Loop through all features and find the best one to remove from the feature set.
         for (const int rmFeatureNum : bestFeatures)
         {
             vector<int> currFeatures;
@@ -251,9 +261,10 @@ void Project::backward_elimination()
                 currFeatures.push_back(featureNum);
             }
             cout << " } ";
-
+            // Perform leave-one-out validation on the current feature set to find the accuracy
             const int numCorrect = leaveOneOutValidator(currFeatures, wrongLimit);
             const double accuracy = (100.0 * (numCorrect / static_cast<double>(numInstances - 1)));
+            // Print the accuracy of the current feature set
             if (numCorrect <= maxCorrect)
             {
                 cout << "was early abandoned.";
@@ -264,14 +275,14 @@ void Project::backward_elimination()
             }
 
             cout << endl;
-
+            // If the current accuracy is better than the current max, update the current max and the best feature set at this depth
             if (numCorrect > depthMaxCorrect)
             {
                 depthMaxCorrect = numCorrect;
                 depthBestFeatures = currFeatures;
             }
         }
-
+        // Print the best feature set at this depth and its accuracy
         const double depthBestAccuracy = (100.0 * (depthMaxCorrect / static_cast<double>(numInstances - 1)));
         displayLocal(depthBestFeatures, depthBestAccuracy);
         if (depthMaxCorrect > maxCorrect)
@@ -285,7 +296,7 @@ void Project::backward_elimination()
             break;
         }
     }
-
+    // Print the best feature set and its accuracy at the end of the algorithm
     const double bestAccuracy = (100.0 * (maxCorrect / static_cast<double>(numInstances - 1)));
     displayBest(bestFeatures, bestAccuracy);
 }
@@ -314,7 +325,7 @@ void Project::normalizeData()
         }
     }
 
-    // Go through dataset again and apply min max normalization
+    // Go through dataset again and apply min max normalization to each feature
     for (vector<double> &row : dataset)
     {
         for (int featureIdx = 1; featureIdx < numFeatures; ++featureIdx)
@@ -329,10 +340,11 @@ void Project::normalizeData()
          << endl;
 }
 
+// calculate the accuracy of the dataset using the default rate, which is the percentage of the majority class in the dataset
 double Project::defaultRate()
 {
     int numClass1 = 0, numClass2 = 0;
-
+    // Go through dataset and count the number of each class
     for (const vector<double> &row : dataset)
     {
         const double class_label = row.at(0);
@@ -341,25 +353,28 @@ double Project::defaultRate()
         else
             numClass2++;
     }
-
+    // Find the biggest class and calculate the accuracy of the default rate
     int biggestClass = max(numClass1, numClass2);
     double accuracy = 100.0 * (static_cast<double>(biggestClass) / dataset.size());
 
     return accuracy;
 }
 
+// search function to run the forward selection or backward elimination algorithm
+// and calculate the stating accuracy of the dataset for both algorithms
 void Project::search(int choice)
 {
     const int numRows = dataset.size();
     const int numFeatures = dataset.at(0).size();
-
+    // Print the number of features and instances in the dataset
     cout << "This dataset has " << (numFeatures - 1) << " features (not including the class attribute), with "
          << numRows << " instances." << endl;
-
+    // Normalize the data before running the algorithms
     normalizeData();
-
+    // run the forward selection algorithm
     if (choice == 1)
     {
+        // Print the accuracy of the dataset using the default rate
         cout
             << "Running nearest neighbor with no features (default rate), using \"leaving-one-out\" evaluation, I get an accuracy of "
             << defaultRate() << "%" << endl
@@ -368,14 +383,15 @@ void Project::search(int choice)
              << endl;
         forward_selection();
     }
+    // run the backward elimination algorithm
     else if (choice == 2)
     {
         std::vector<int> allFeatures(numFeatures - 1);
         std::iota(allFeatures.begin(), allFeatures.end(), 1);
-
+        // print the accuracy of the dataset using all features before running the algorithm
         cout
             << "Running nearest neighbor with ALL features, using \"leaving-one-out\" evaluation, I get an accuracy of "
-            << 100 * (static_cast<double>(leaveOneOutValidator(allFeatures, numRows)) / (numRows - 1))  << "%" << endl
+            << 100 * (static_cast<double>(leaveOneOutValidator(allFeatures, numRows)) / (numRows - 1)) << "%" << endl
             << endl;
         cout << "Beginning search." << endl
              << endl;

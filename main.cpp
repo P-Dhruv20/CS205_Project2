@@ -59,7 +59,7 @@ int main()
     cin >> choice;
     cout << endl;
 
-//    filename = "../data/" + filename;
+    // filename = "../data/" + filename;
 
     ifstream fileRead;
     fileRead.open(filename.c_str());
@@ -74,6 +74,7 @@ int main()
 
     Project project = Project(dataset);
     const auto start = chrono::high_resolution_clock::now();
+    // Run the search algorithm based on the user's choice
     project.search(choice);
     const auto end = chrono::high_resolution_clock::now();
 

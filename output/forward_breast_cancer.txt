@@ -1,0 +1,181 @@
+Welcome to Feature Selection Algorithm.
+
+Type in the name of the dataset to test:
+processed_breast-cancer.csv
+
+Type the number of the algorithm you want to run.
+1. Forward Selection
+2. Backward Elimination
+1
+
+This dataset has 30 features (not including the class attribute), with 569 instances.
+
+Please wait while I normalize the data ... Done!
+
+Running nearest neighbor with no features (default rate), using "leaving-one-out" evaluation, I get an accuracy of 62.7417%
+
+Beginning search.
+
+Exploring accuracy of NN with 1 features!
+Using feature(s) { 1 } accuracy is 80.6338%
+Using feature(s) { 2 } accuracy is 62.5%
+Using feature(s) { 3 } accuracy is 82.7465%
+Using feature(s) { 4 } accuracy is 81.6901%
+Using feature(s) { 5 } accuracy is 62.8521%
+Using feature(s) { 6 } accuracy is 73.9437%
+Using feature(s) { 7 } accuracy is 81.8662%
+Using feature(s) { 8 } accuracy is 84.1549%
+Using feature(s) { 9 } accuracy is 58.0986%
+Using feature(s) { 10 } accuracy is 55.9859%
+Using feature(s) { 11 } accuracy is 75.7042%
+Using feature(s) { 12 } accuracy is 54.9296%
+Using feature(s) { 13 } accuracy is 73.2394%
+Using feature(s) { 14 } accuracy is 78.6972%
+Using feature(s) { 15 } accuracy is 51.7606%
+Using feature(s) { 16 } accuracy is 60.0352%
+Using feature(s) { 17 } accuracy is 63.9085%
+Using feature(s) { 18 } accuracy is 64.7887%
+Using feature(s) { 19 } accuracy is 51.5845%
+Using feature(s) { 20 } accuracy is 54.4014%
+Using feature(s) { 21 } accuracy is 85.2113%
+Using feature(s) { 22 } accuracy is 63.3803%
+Using feature(s) { 23 } accuracy is 87.1479%
+Using feature(s) { 24 } accuracy is 87.6761%
+Using feature(s) { 25 } accuracy is 61.2676%
+Using feature(s) { 26 } accuracy is 72.3592%
+Using feature(s) { 27 } accuracy is 79.7535%
+Using feature(s) { 28 } accuracy is 88.5563%
+Using feature(s) { 29 } accuracy is 59.6831%
+Using feature(s) { 30 } accuracy is 64.7887%
+The feature set best at this depth is { 28 } with an accuracy of 88.5563%
+
+Exploring accuracy of NN with 2 features!
+Re-ordered dataset for quicker early abandoning!
+Using feature(s) { 28, 1 } accuracy is 91.5493%
+Using feature(s) { 28, 2 } accuracy is 90.1408%
+Using feature(s) { 28, 3 } accuracy is 90.1408%
+Using feature(s) { 28, 4 } accuracy is 90.669%
+Using feature(s) { 28, 5 } accuracy is 89.7887%
+Using feature(s) { 28, 6 } was early abandoned.
+Using feature(s) { 28, 7 } was early abandoned.
+Using feature(s) { 28, 8 } was early abandoned.
+Using feature(s) { 28, 9 } was early abandoned.
+Using feature(s) { 28, 10 } accuracy is 90.1408%
+Using feature(s) { 28, 11 } accuracy is 88.7324%
+Using feature(s) { 28, 12 } was early abandoned.
+Using feature(s) { 28, 13 } was early abandoned.
+Using feature(s) { 28, 14 } accuracy is 92.9577%
+Using feature(s) { 28, 15 } was early abandoned.
+Using feature(s) { 28, 16 } was early abandoned.
+Using feature(s) { 28, 17 } accuracy is 88.9085%
+Using feature(s) { 28, 18 } was early abandoned.
+Using feature(s) { 28, 19 } was early abandoned.
+Using feature(s) { 28, 20 } accuracy is 88.7324%
+Using feature(s) { 28, 21 } accuracy is 91.9014%
+Using feature(s) { 28, 22 } accuracy is 91.5493%
+Using feature(s) { 28, 23 } accuracy is 91.9014%
+Using feature(s) { 28, 24 } accuracy is 92.6056%
+Using feature(s) { 28, 25 } accuracy is 89.6127%
+Using feature(s) { 28, 26 } accuracy is 91.1972%
+Using feature(s) { 28, 27 } accuracy is 89.2606%
+Using feature(s) { 28, 29 } was early abandoned.
+Using feature(s) { 28, 30 } was early abandoned.
+The feature set best at this depth is { 28, 14 } with an accuracy of 92.9577%
+
+Exploring accuracy of NN with 3 features!
+Re-ordered dataset for quicker early abandoning!
+Using feature(s) { 28, 14, 1 } was early abandoned.
+Using feature(s) { 28, 14, 2 } accuracy is 94.1901%
+Using feature(s) { 28, 14, 3 } was early abandoned.
+Using feature(s) { 28, 14, 4 } was early abandoned.
+Using feature(s) { 28, 14, 5 } was early abandoned.
+Using feature(s) { 28, 14, 6 } was early abandoned.
+Using feature(s) { 28, 14, 7 } was early abandoned.
+Using feature(s) { 28, 14, 8 } was early abandoned.
+Using feature(s) { 28, 14, 9 } was early abandoned.
+Using feature(s) { 28, 14, 10 } was early abandoned.
+Using feature(s) { 28, 14, 11 } was early abandoned.
+Using feature(s) { 28, 14, 12 } was early abandoned.
+Using feature(s) { 28, 14, 13 } was early abandoned.
+Using feature(s) { 28, 14, 15 } was early abandoned.
+Using feature(s) { 28, 14, 16 } was early abandoned.
+Using feature(s) { 28, 14, 17 } was early abandoned.
+Using feature(s) { 28, 14, 18 } was early abandoned.
+Using feature(s) { 28, 14, 19 } was early abandoned.
+Using feature(s) { 28, 14, 20 } was early abandoned.
+Using feature(s) { 28, 14, 21 } was early abandoned.
+Using feature(s) { 28, 14, 22 } accuracy is 95.4225%
+Using feature(s) { 28, 14, 23 } was early abandoned.
+Using feature(s) { 28, 14, 24 } accuracy is 93.662%
+Using feature(s) { 28, 14, 25 } was early abandoned.
+Using feature(s) { 28, 14, 26 } was early abandoned.
+Using feature(s) { 28, 14, 27 } was early abandoned.
+Using feature(s) { 28, 14, 29 } was early abandoned.
+Using feature(s) { 28, 14, 30 } was early abandoned.
+The feature set best at this depth is { 28, 14, 22 } with an accuracy of 95.4225%
+
+Exploring accuracy of NN with 4 features!
+Re-ordered dataset for quicker early abandoning!
+Using feature(s) { 28, 14, 22, 1 } accuracy is 95.9507%
+Using feature(s) { 28, 14, 22, 2 } was early abandoned.
+Using feature(s) { 28, 14, 22, 3 } was early abandoned.
+Using feature(s) { 28, 14, 22, 4 } accuracy is 95.9507%
+Using feature(s) { 28, 14, 22, 5 } was early abandoned.
+Using feature(s) { 28, 14, 22, 6 } was early abandoned.
+Using feature(s) { 28, 14, 22, 7 } was early abandoned.
+Using feature(s) { 28, 14, 22, 8 } was early abandoned.
+Using feature(s) { 28, 14, 22, 9 } was early abandoned.
+Using feature(s) { 28, 14, 22, 10 } was early abandoned.
+Using feature(s) { 28, 14, 22, 11 } was early abandoned.
+Using feature(s) { 28, 14, 22, 12 } was early abandoned.
+Using feature(s) { 28, 14, 22, 13 } was early abandoned.
+Using feature(s) { 28, 14, 22, 15 } was early abandoned.
+Using feature(s) { 28, 14, 22, 16 } was early abandoned.
+Using feature(s) { 28, 14, 22, 17 } was early abandoned.
+Using feature(s) { 28, 14, 22, 18 } was early abandoned.
+Using feature(s) { 28, 14, 22, 19 } was early abandoned.
+Using feature(s) { 28, 14, 22, 20 } was early abandoned.
+Using feature(s) { 28, 14, 22, 21 } accuracy is 97.007%
+Using feature(s) { 28, 14, 22, 23 } accuracy is 96.1268%
+Using feature(s) { 28, 14, 22, 24 } accuracy is 97.3592%
+Using feature(s) { 28, 14, 22, 25 } was early abandoned.
+Using feature(s) { 28, 14, 22, 26 } was early abandoned.
+Using feature(s) { 28, 14, 22, 27 } was early abandoned.
+Using feature(s) { 28, 14, 22, 29 } was early abandoned.
+Using feature(s) { 28, 14, 22, 30 } was early abandoned.
+The feature set best at this depth is { 28, 14, 22, 24 } with an accuracy of 97.3592%
+
+Exploring accuracy of NN with 5 features!
+Re-ordered dataset for quicker early abandoning!
+Using feature(s) { 28, 14, 22, 24, 1 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 2 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 3 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 4 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 5 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 6 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 7 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 8 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 9 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 10 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 11 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 12 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 13 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 15 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 16 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 17 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 18 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 19 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 20 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 21 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 23 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 25 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 26 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 27 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 29 } was early abandoned.
+Using feature(s) { 28, 14, 22, 24, 30 } was early abandoned.
+The feature set best at this depth is { 28, 14, 22, 24, 1 } with an accuracy of 97.1831%
+
+Warning! Accuracy has decreased! Continuing search in case of local maxima.
+
+Finished search!! The best feature set is { 28, 14, 22, 24 }, with an accuracy of 97.3592%
+Search completed in 2.38 seconds.
